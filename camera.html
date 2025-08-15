@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Deteksi Wajah</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
+  </head>
+  <body style="background:black; color:#00ff00; text-align:center; font-family:monospace;">
+    <h2>👀 Kamera Deteksi Wajah</h2>
+    <video id="video" autoplay playsinline width="300" height="300"></video>
+    <p id="status">Menunggu kamera...</p>
+
+    <script>
+      async function setupCamera() {
+        const video = document.getElementById('video');
+        const stream = await navigator.mediaDevices.getUserMedia({video: true});
+        video.srcObject = stream;
+        return new Promise((resolve) => {
+          video.onloadedmetadata = () => resolve(video);
+        });
+      }
+
+      async function main() {
+        const video = await setupCamera();
+        const model = await blazeface.load();
+        document.getElementById("status").innerText = "🔍 Mendeteksi...";
+
+        setInterval(async () => {
+          const predictions = await model.estimateFaces(video, false);
+          if (predictions.length > 0) {
+            document.getElementById("status").innerHTML = "😎 Wajah terdeteksi!";
+          } else {
+            document.getElementById("status").innerHTML = "🚫 Tidak ada wajah.";
+          }
+        }, 500);
+      }
+
+      main();
+    </script>
+  </body>
+</html>
