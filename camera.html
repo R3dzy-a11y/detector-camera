@@ -1,22 +1,96 @@
 <!DOCTYPE html>
-<html>
-  <body style="background:#000; color:#0f0; text-align:center;">
-    <h2>📸 Test Kamera</h2>
-    <video id="video" autoplay playsinline width="320" height="240" style="border:2px solid #0f0;"></video>
-    <p id="status">Loading...</p>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bug Hunter Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      background: #0d0d0d;
+      color: #00ff99;
+      font-family: monospace;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 10px;
+    }
+    .card {
+      background: #1a1a1a;
+      border: 1px solid #00ff99;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 500px;
+      box-shadow: 0 0 20px rgba(0,255,153,0.3);
+    }
+    canvas {
+      background: #111;
+      border-radius: 10px;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🚀 Bug Hunter Dashboard</h1>
+  <p>Data simulasi hasil hunting</p>
 
-    <script>
-      async function startCam() {
-        const video = document.getElementById("video");
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-          video.srcObject = stream;
-          document.getElementById("status").innerText = "✅ Kamera aktif!";
-        } catch (e) {
-          document.getElementById("status").innerText = "❌ Error: " + e.message;
-        }
+  <div class="card">
+    <h2>Severity Breakdown</h2>
+    <canvas id="severityChart"></canvas>
+  </div>
+
+  <div class="card">
+    <h2>Bugs Per Month</h2>
+    <canvas id="bugsChart"></canvas>
+  </div>
+
+  <div class="card">
+    <h2>Top Programs</h2>
+    <ul style="text-align:left; list-style:none; padding:0;">
+      <li>1️⃣ HackerOne - 12 bugs</li>
+      <li>2️⃣ Bugcrowd - 8 bugs</li>
+      <li>3️⃣ Intigriti - 5 bugs</li>
+    </ul>
+  </div>
+
+  <script>
+    // Chart 1 - Severity Breakdown
+    new Chart(document.getElementById("severityChart"), {
+      type: 'doughnut',
+      data: {
+        labels: ["Critical", "High", "Medium", "Low"],
+        datasets: [{
+          data: [3, 7, 12, 5],
+          backgroundColor: ["#ff0033", "#ff6600", "#ffaa00", "#00ccff"]
+        }]
+      },
+      options: {
+        plugins: { legend: { labels: { color: "#00ff99" } } }
       }
-      startCam();
-    </script>
-  </body>
+    });
+
+    // Chart 2 - Bugs Per Month
+    new Chart(document.getElementById("bugsChart"), {
+      type: 'line',
+      data: {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+        datasets: [{
+          label: "Bugs Found",
+          data: [2, 5, 3, 8, 6, 9],
+          borderColor: "#00ff99",
+          backgroundColor: "#00ff99"
+        }]
+      },
+      options: {
+        scales: {
+          x: { ticks: { color: "#00ff99" } },
+          y: { ticks: { color: "#00ff99" } }
+        },
+        plugins: { legend: { labels: { color: "#00ff99" } } }
+      }
+    });
+  </script>
+</body>
 </html>
