@@ -1,41 +1,22 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Deteksi Wajah</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
-  </head>
-  <body style="background:black; color:#00ff00; text-align:center; font-family:monospace;">
-    <h2>👀 Kamera Deteksi Wajah</h2>
-    <video id="video" autoplay playsinline width="300" height="300"></video>
-    <p id="status">Menunggu kamera...</p>
+  <body style="background:#000; color:#0f0; text-align:center;">
+    <h2>📸 Test Kamera</h2>
+    <video id="video" autoplay playsinline width="320" height="240" style="border:2px solid #0f0;"></video>
+    <p id="status">Loading...</p>
 
     <script>
-      async function setupCamera() {
-        const video = document.getElementById('video');
-        const stream = await navigator.mediaDevices.getUserMedia({video: true});
-        video.srcObject = stream;
-        return new Promise((resolve) => {
-          video.onloadedmetadata = () => resolve(video);
-        });
+      async function startCam() {
+        const video = document.getElementById("video");
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          video.srcObject = stream;
+          document.getElementById("status").innerText = "✅ Kamera aktif!";
+        } catch (e) {
+          document.getElementById("status").innerText = "❌ Error: " + e.message;
+        }
       }
-
-      async function main() {
-        const video = await setupCamera();
-        const model = await blazeface.load();
-        document.getElementById("status").innerText = "🔍 Mendeteksi...";
-
-        setInterval(async () => {
-          const predictions = await model.estimateFaces(video, false);
-          if (predictions.length > 0) {
-            document.getElementById("status").innerHTML = "😎 Wajah terdeteksi!";
-          } else {
-            document.getElementById("status").innerHTML = "🚫 Tidak ada wajah.";
-          }
-        }, 500);
-      }
-
-      main();
+      startCam();
     </script>
   </body>
 </html>
